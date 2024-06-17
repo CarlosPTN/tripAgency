@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
 const validator = require("validator");
+const bcrypt = require("bcryptjs");
 
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
@@ -31,9 +31,26 @@ const userSchema = mongoose.Schema({
   passwordConfirm: {
     type: String,
     required: [true, "Please provide your password"],
+    validate: {
+      // This only works on Create and Save!!!
+      validator: function (el) {
+        return el === this.password;
+      },
+      message: "Passwords are not the same",
+    },
   },
 }); //the second parameter of the  schema is the object of the option non persistent shecma
 // and now the model:
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  // hash the password witht he cost of 12
+  this.password = await bcrypt.hash(this.password, 12);
+  // delete the passwordConfirm field
+  this.passwordConfirm = undefined;
+  next();
+});
 
 const User = mongoose.model("User", userSchema);
 
