@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const fs = require("fs");
 const dotenv = require("dotenv");
+const jwt = require("jsonwebtoken");
 
 process.on("uncaughtException", (err) => {
   console.log(err.message, err.name);

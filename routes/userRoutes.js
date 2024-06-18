@@ -8,6 +8,7 @@ const router = express.Router();
 
 // we cannot fecth from signup, catch data it doesnt make much sense,
 router.post("/signup", authController.signup);
+router.post("/login", authController.login);
 
 const getAllUsers = (req, res) => {
   res.status(500).json({
@@ -46,7 +47,7 @@ const updateUser = (req, res) => {
 
 // app.use('/api/v1/users', userRouter); //this is called mounting the router
 
-router.route("/").get(getAllUsers).post(createUser);
+router.route("/").get(userController.getAllUsers).post(createUser);
 
 router.route("/:id").get(getUser).patch(updateUser).delete(deleteUser);
 
