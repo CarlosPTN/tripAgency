@@ -22,6 +22,11 @@ const userSchema = mongoose.Schema({
     validate: [validator.isEmail, "Please provide a valid email"],
   },
   photo: String,
+  role: {
+    type: String,
+    enum: ["user", "guide", "lead-guide", "admin"],
+    default: "user",
+  },
   password: {
     type: String,
     required: [true, "Please provide a password"],
@@ -40,6 +45,7 @@ const userSchema = mongoose.Schema({
       message: "Passwords are not the same",
     },
   },
+  passwordChangedAt: Date,
 }); //the second parameter of the  schema is the object of the option non persistent shecma
 // and now the model:
 
@@ -58,6 +64,22 @@ userSchema.methods.correctPassword = async function (
   userPassword
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  // in an instance method it points to the actual document
+  if (this.passwordChangedAt) {
+    console.log(this.passwordChangedAt, JWTTimestamp);
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10 //here we add the base 10
+    );
+
+    console.log(changedTimestamp, JWTTimestamp);
+    return changedTimestamp > JWTTimestamp; //100<200
+  }
+  // False means NOT changed
+  return false;
 };
 
 const User = mongoose.model("User", userSchema);

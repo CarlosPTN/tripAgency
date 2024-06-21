@@ -1,6 +1,6 @@
 function toCamelCase(str) {
   if (str.length === 0) {
-    return '';
+    return "";
   }
 
   if (str[0] !== str[0].toUpperCase()) {
@@ -13,13 +13,13 @@ function toCamelCase(str) {
           return word;
         }
       })
-      .join('');
+      .join("");
   } else {
     return str
       .split(/[-_]/)
       .map((word, index) => {
         return word[0].toUpperCase() + word.slice(1);
       })
-      .join('');
+      .join("");
   }
 }

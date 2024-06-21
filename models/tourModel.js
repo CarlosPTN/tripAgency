@@ -44,8 +44,8 @@ const tourSchema = new mongoose.Schema(
     ratingsAverage: {
       type: Number,
       default: 4.5,
-      min: [1, "Ratingg must be above 1"],
-      max: [5, "Ratingg must be below 5.0"],
+      min: [1, "Rating must be above 1"],
+      max: [5, "Rating must be below 5.0"],
     },
     ratingsQuantity: { type: Number, default: 0 },
     price: {
@@ -127,7 +127,7 @@ tourSchema.pre(/^find/, function (next) {
 
 tourSchema.post(/^find/, function (docs, next) {
   console.log(`Query took ${Date.now() - this.start} milliseconds`);
-  console.log(docs);
+  // console.log(docs);
   next();
 });
 

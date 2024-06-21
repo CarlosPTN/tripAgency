@@ -52,7 +52,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
     .limitFields()
     .paginate();
   const tours = await features.query;
-  console.log(c);
+  // console.log(c);
   // console.log('this are the tours that ', tours);
   // .where('duration')
   // .equals(5)
@@ -75,11 +75,13 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 });
 
 exports.getTour = catchAsync(async (req, res, next) => {
+  console.log("😊😊", req.params.id);
+
   const tour = await Tour.findById(req.params.id); // it comes from the mongoose
   // Tour.findOne({_id: req.params.id}) the code above is equivalent to this
-  console.log(tour);
+  // console.log(tour);
   if (!tour) {
-    console.log(tour);
+    // console.log(tour);
     return next(new AppError("No tour found with that id", 404));
   }
 

@@ -50,6 +50,15 @@ const sendErrorProd = (err, res) => {
   }
 };
 
+const handleJWTError = (err) => {
+  console.log(err);
+  return new AppError("Invalid token please login again", 401);
+};
+
+const handleJWTExpiredError = (err) => {
+  return new AppError("Your token has expired, please login again", 444);
+};
+
 module.exports = (err, req, res, next) => {
   // console.log(err.stack);
 
@@ -64,7 +73,11 @@ module.exports = (err, req, res, next) => {
       error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
     if (error.name === "ValidationError")
+      //this come from mongoose so we were able to separate the error mangement with
       error = handleValidationErrorDB(error);
+    if (error.name === "JsonWebTokenError") error = handleJWTError(error);
+    if (error.name === "TokenExpiredError")
+      error = handleJWTExpiredError(error);
 
     sendErrorProd(error, res);
   }
